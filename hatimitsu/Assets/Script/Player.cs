@@ -102,4 +102,29 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10f * Time.deltaTime);
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.Die();
+                AddBoost(m_fBoost);
+            }
+        }
+    }
+
+    /*＞加速度増加関数
+   引数：なし
+   ｘ
+   戻値：なし
+   ｘ
+   概要:プレイヤーの速度をあげる
+   */
+    public void AddBoost(float _boost)
+    {
+        m_fSpeed += _boost;
+    }
 }

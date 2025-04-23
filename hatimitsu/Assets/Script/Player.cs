@@ -15,18 +15,22 @@ _M04
 __D     
 ___11:プログラム作成:yamamoto   
 ___12:スコアデバック用のプログラムを追加:yamamoto
+___22:移動の仕様変更:yamamoto
 
 =====*/
+
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    //変数宣言
+    // 変数宣言
     [Header("ステータス")] 
     [SerializeField, Tooltip("移動速度")] private float m_fSpeed;
+    [SerializeField, Tooltip("加速")] private float m_fBoost;
 
     private Rigidbody rb;
     private ScoreManager scoreManager;
+    private Vector3 moveDir = Vector3.forward; // 現在の進行方向を保持
 
     /*＞Start関数
     引数：なし
@@ -37,11 +41,11 @@ public class Player : MonoBehaviour
     */
     void Start()
     {
-        rb= GetComponent<Rigidbody>();  //Rigidbodyの取得
+        rb= GetComponent<Rigidbody>();  // Rigidbodyの取得
         scoreManager=FindAnyObjectByType<ScoreManager>();
     }
 
-    /*＞Update関数
+    /*＞FixedUpdate関数
     引数：なし
     ｘ
     戻値：なし
@@ -50,41 +54,52 @@ public class Player : MonoBehaviour
     */
     void FixedUpdate()
     {
-        Move();
-        
+        // 向いている方向に進み続ける
+        rb.linearVelocity = transform.forward * m_fSpeed;
+
     }
 
-    //scoreの確認用
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q)) scoreManager.AddScore(100, 1);
-    }
-
-    /*＞移動関数
+    /*＞Update関数
     引数：なし
     ｘ
     戻値：なし
     ｘ
-    概要:プレイヤーの移動関係
+    概要:更新関数
     */
-    private void Move()
+
+    private void Update()
     {
-        Vector3 moveDir = Vector3.zero; //移動量保存用
+        //////////////////////////////////////////////////////////
+        //デバッグ用
+        if (Input.GetKeyDown(KeyCode.Q)) scoreManager.AddScore(100, 1); // スコア加算用　*必要か分からん
+        if (Input.GetKeyDown(KeyCode.E)) m_fSpeed += m_fBoost; // 加速デバッグ用
+        ////////////////////////////////////////////////////
+        rotation();
+    }
 
-        //キーボード操作
-        if (Input.GetKey(KeyCode.W)) moveDir += Vector3.forward;
-        if (Input.GetKey(KeyCode.S)) moveDir += Vector3.back;
-        if (Input.GetKey(KeyCode.D)) moveDir += Vector3.right;
-        if (Input.GetKey(KeyCode.A)) moveDir += Vector3.left;
+    /*＞回転関数
+    引数：なし
+    ｘ
+    戻値：なし
+    ｘ
+    概要:プレイヤーの向きを回転させる
+    */
+    private void rotation()
+    {
+        // 入力によって進行方向を更新
+        Vector3 inputDir = Vector3.zero;
+        if (Input.GetKey(KeyCode.W)) inputDir += Vector3.forward;
+        if (Input.GetKey(KeyCode.S)) inputDir += Vector3.back;
+        if (Input.GetKey(KeyCode.D)) inputDir += Vector3.right;
+        if (Input.GetKey(KeyCode.A)) inputDir += Vector3.left;
 
-        //移動処理
-        rb.linearVelocity = moveDir.normalized * m_fSpeed;
-
-        // 進行方向に向く処理
-        if (moveDir != Vector3.zero)
+        if (inputDir != Vector3.zero)
         {
+            moveDir = inputDir.normalized;
+
+            // 入力に合わせて向きを変える
             Quaternion targetRot = Quaternion.LookRotation(moveDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10f * Time.fixedDeltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10f * Time.deltaTime);
         }
     }
 }

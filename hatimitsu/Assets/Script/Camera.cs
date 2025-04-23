@@ -40,7 +40,7 @@ public class Camera : MonoBehaviour
     */
     private void Start()
     {
-        //‰Šú‰»
+        // ‰Šú‰»
         transform.position = m_Target.position;
     }
 

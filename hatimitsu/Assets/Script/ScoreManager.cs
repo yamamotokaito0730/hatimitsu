@@ -34,13 +34,14 @@ public class ScoreManager : MonoBehaviour
     */
     void Start()
     {
-        //初期化
+        // 初期化
         m_Score = 0;
         UpdateScoreUI();
     }
 
     /*＞スコア加算関数
-    引数：なし
+    引数1：int _score:加算する値
+    引数1：float _rate:加算倍率
     ｘ
     戻値：なし
     ｘ
@@ -49,13 +50,13 @@ public class ScoreManager : MonoBehaviour
     public void AddScore(int _score,float _rate)
     {
         m_Score += _score * _rate;
-        //ScoreUIを呼び出し更新させる
+        // ScoreUIを呼び出し更新させる
         UpdateScoreUI();
 
     }
 
     /*＞スコア減算関数
-   引数：なし
+   引数：int _score:減算する値
    ｘ
    戻値：なし
    ｘ
@@ -64,7 +65,7 @@ public class ScoreManager : MonoBehaviour
     public void SubScore(int _score)
     {
         m_Score -= _score;
-        //ScoreUIを呼び出し更新させる
+        // ScoreUIを呼び出し更新させる
         UpdateScoreUI();
     }
 

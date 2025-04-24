@@ -27,10 +27,15 @@ public class Player : MonoBehaviour
     [Header("ステータス")] 
     [SerializeField, Tooltip("移動速度")] private float m_fSpeed;
     [SerializeField, Tooltip("加速")] private float m_fBoost;
+    [Header("デバッグ")]
+    [SerializeField, Tooltip("デバッグ表示")] private bool m_bDebugView = false;
 
     private Rigidbody rb;
     private ScoreManager scoreManager;
+    private DebugMode debugMode;
     private Vector3 moveDir = Vector3.forward; // 現在の進行方向を保持
+    private int nEnemyKillCount = 0; // 倒した敵の数
+
 
     /*＞Start関数
     引数：なし
@@ -43,6 +48,9 @@ public class Player : MonoBehaviour
     {
         rb= GetComponent<Rigidbody>();  // Rigidbodyの取得
         scoreManager=FindAnyObjectByType<ScoreManager>();
+        debugMode = FindAnyObjectByType<DebugMode>(); // デバッグクラスの取得
+
+        debugMode.ToggleDebugText(m_bDebugView); // 最初は非表示にする
     }
 
     /*＞FixedUpdate関数
@@ -56,7 +64,6 @@ public class Player : MonoBehaviour
     {
         // 向いている方向に進み続ける
         rb.linearVelocity = transform.forward * m_fSpeed;
-
     }
 
     /*＞Update関数
@@ -73,7 +80,18 @@ public class Player : MonoBehaviour
         //デバッグ用
         if (Input.GetKeyDown(KeyCode.Q)) scoreManager.AddScore(100, 1); // スコア加算用　*必要か分からん
         if (Input.GetKeyDown(KeyCode.E)) m_fSpeed += m_fBoost; // 加速デバッグ用
+
+        // デバッグUI表示
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            m_bDebugView = !m_bDebugView; // UIの表示非表示切り替え
+            debugMode.ToggleDebugText(m_bDebugView);
+        }
+
+        debugMode.UpdateDebugUI(transform.position, m_fSpeed, nEnemyKillCount); // デバッグUIの更新
+
         ////////////////////////////////////////////////////
+
         rotation();
     }
 
@@ -112,6 +130,7 @@ public class Player : MonoBehaviour
             {
                 enemy.Die();
                 AddBoost(m_fBoost);
+                nEnemyKillCount++; // キルカウントの増加
             }
         }
     }

@@ -22,10 +22,13 @@ using UnityEngine.UI;
 
 public class DebugMode : MonoBehaviour 
 {
-
+    [Header("デバッグテキスト")]
     [SerializeField] private TextMeshProUGUI speedText;
     [SerializeField] private TextMeshProUGUI posText;
     [SerializeField] private TextMeshProUGUI killCountText;
+
+    [Header("デバッグプレハブ")]
+    [SerializeField] private GameObject debugPrefab; 
 
     /*＞デバッグ更新関数
     引数1：_PlayerPos
@@ -43,20 +46,4 @@ public class DebugMode : MonoBehaviour
         killCountText.text = "Count" + _KillCount;
 
     }
-    /*＞デバッグ表示関数
-    引数：_Show
-    ｘ
-    戻値：なし
-    ｘ
-    概要:デバッグUIの表示非表示を切り替える
-    */
-    public void ToggleDebugText(bool _Show)
-    {
-        // nullチェックしながら表示/非表示
-        if (speedText != null) speedText.enabled = _Show;
-        if (posText != null) posText.enabled = _Show;
-        if (killCountText != null) killCountText.enabled = _Show;
-    }
-
-
 }

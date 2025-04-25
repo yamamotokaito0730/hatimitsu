@@ -256,6 +256,7 @@ MonoBehaviour:
   speedText: {fileID: 5905038972687805423}
   posText: {fileID: 4549596033847543984}
   killCountText: {fileID: 2736974471101754937}
+  debugPrefab: {fileID: 0}
 --- !u!1 &3975600512018883197
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,7 +523,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -227.98657, y: 0, z: 0, w: 0}
+  m_margin: {x: -294.84723, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

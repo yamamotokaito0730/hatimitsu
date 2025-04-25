@@ -29,10 +29,11 @@ public class Player : MonoBehaviour
     [SerializeField, Tooltip("加速")] private float m_fBoost;
     [Header("デバッグ")]
     [SerializeField, Tooltip("デバッグ表示")] private bool m_bDebugView = false;
+    [SerializeField, Tooltip("デバッグプレハブ取得")] private GameObject debugPrefab;
 
     private Rigidbody rb;
     private ScoreManager scoreManager;
-    private DebugMode debugMode;
+    private DebugMode debugModeInstance;
     private Vector3 moveDir = Vector3.forward; // 現在の進行方向を保持
     private int nEnemyKillCount = 0; // 倒した敵の数
 
@@ -48,9 +49,7 @@ public class Player : MonoBehaviour
     {
         rb= GetComponent<Rigidbody>();  // Rigidbodyの取得
         scoreManager=FindAnyObjectByType<ScoreManager>();
-        debugMode = FindAnyObjectByType<DebugMode>(); // デバッグクラスの取得
-
-        debugMode.ToggleDebugText(m_bDebugView); // 最初は非表示にする
+        debugModeInstance = FindAnyObjectByType<DebugMode>(); // デバッグクラスの取得
     }
 
     /*＞FixedUpdate関数
@@ -85,10 +84,21 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             m_bDebugView = !m_bDebugView; // UIの表示非表示切り替え
-            debugMode.ToggleDebugText(m_bDebugView);
+            if (m_bDebugView)
+            {
+                // プレハブからインスタンスを生成し、DebugModeを取得
+                GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity); // 座標・回転はプレハブ側で設定
+                debugModeInstance = obj.GetComponent<DebugMode>();
+            }
+            else
+            {
+                Destroy(debugModeInstance.gameObject); // UIを非表示(削除)する
+                debugModeInstance = null;
+            }
         }
 
-        debugMode.UpdateDebugUI(transform.position, m_fSpeed, nEnemyKillCount); // デバッグUIの更新
+        if(debugModeInstance != null) 
+             debugModeInstance.UpdateDebugUI(transform.position, m_fSpeed, nEnemyKillCount); // デバッグUIの更新
 
         ////////////////////////////////////////////////////
 

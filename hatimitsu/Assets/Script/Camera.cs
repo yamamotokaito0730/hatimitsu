@@ -14,6 +14,7 @@ Y25
 _M04    
 __D     
 ___11:プログラム作成:yamamoto   //日付:変更内容:施行者
+___27:カメラ移動を←→キーで行うように変更:mori
 
 =====*/
 using UnityEngine;
@@ -28,8 +29,10 @@ public class Camera : MonoBehaviour
     [Header("カメラのオフセット")]
     [SerializeField] private Vector3 m_Offset = new Vector3(0f, 5f, -7f);
 
-    //[Header("カメラの追従速度")]
-    //[SerializeField] private float smoothSpeed = 5f;
+    [Header("カメラの回転速度")]
+    [SerializeField] private float m_RotationSpeed = 100f;
+
+    private float m_Yaw = 0f; // 水平方向の回転量
 
     /*＞Start関数
     引数：なし
@@ -40,8 +43,13 @@ public class Camera : MonoBehaviour
     */
     private void Start()
     {
-        // 初期化
-        transform.position = m_Target.position;
+        // ターゲットが未設定ならプレイヤーを探して設定
+        if (m_Target == null)
+        {
+            m_Target = GameObject.FindWithTag("Player").transform;
+        }
+
+        m_Yaw = transform.eulerAngles.y; // 現在のY軸角度を取得
     }
 
     /*＞LateUpdate関数
@@ -53,16 +61,18 @@ public class Camera : MonoBehaviour
     */
     void LateUpdate()
     {
-        // 目標の位置（ターゲット＋オフセット）
-        Vector3 desiredPosition = m_Target.position + m_Offset;
+        // ←→キー入力でカメラのY軸回転
+        float horizontalInput = 0f;
+        if (Input.GetKey(KeyCode.LeftArrow)) horizontalInput = -1f;
+        if (Input.GetKey(KeyCode.RightArrow)) horizontalInput = 1f;
 
-        // スムーズにカメラを移動させる（補間）ダッシュの時使用
-        //Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
-        //transform.position = smoothedPosition;
+        m_Yaw += horizontalInput * m_RotationSpeed * Time.deltaTime;
 
-        transform.position = desiredPosition;
+        // カメラ位置をターゲットの位置＋オフセットに設定
+        Vector3 targetPosition = m_Target.position + Quaternion.Euler(0f, m_Yaw, 0f) * m_Offset;
+        transform.position = targetPosition;
 
-        // ターゲットを常に見つめる
+        // ターゲットを常に見る
         transform.LookAt(m_Target.position);
     }
 }

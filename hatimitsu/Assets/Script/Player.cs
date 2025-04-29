@@ -16,6 +16,7 @@ __D
 ___11:プログラム作成:yamamoto   
 ___12:スコアデバック用のプログラムを追加:yamamoto
 ___22:移動の仕様変更:yamamoto
+___27:プレイヤーの移動をADキーのみに変更:mori
 
 =====*/
 
@@ -114,20 +115,17 @@ public class Player : MonoBehaviour
     */
     private void rotation()
     {
-        // 入力によって進行方向を更新
-        Vector3 inputDir = Vector3.zero;
-        if (Input.GetKey(KeyCode.W)) inputDir += Vector3.forward;
-        if (Input.GetKey(KeyCode.S)) inputDir += Vector3.back;
-        if (Input.GetKey(KeyCode.D)) inputDir += Vector3.right;
-        if (Input.GetKey(KeyCode.A)) inputDir += Vector3.left;
+        float rotateSpeed = 100f; // 回転速度
 
-        if (inputDir != Vector3.zero)
+        float turn = 0f;
+
+        if (Input.GetKey(KeyCode.A)) turn = -1f; // 左回転
+        if (Input.GetKey(KeyCode.D)) turn = 1f;  // 右回転
+
+        if (turn != 0f)
         {
-            moveDir = inputDir.normalized;
-
-            // 入力に合わせて向きを変える
-            Quaternion targetRot = Quaternion.LookRotation(moveDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10f * Time.deltaTime);
+            // Y軸を中心に回転させる
+            transform.Rotate(0f, turn * rotateSpeed * Time.deltaTime, 0f);
         }
     }
 

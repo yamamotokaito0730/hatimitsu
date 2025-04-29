@@ -99,7 +99,7 @@ public class Player : MonoBehaviour
         }
 
         if(debugModeInstance != null) 
-             debugModeInstance.UpdateDebugUI(transform.position, m_fSpeed, nEnemyKillCount); // デバッグUIの更新
+             debugModeInstance.UpdateDebugUI(transform, m_fSpeed, nEnemyKillCount); // デバッグUIの更新
 
         ////////////////////////////////////////////////////
 

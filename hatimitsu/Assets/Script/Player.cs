@@ -17,6 +17,8 @@ ___11:プログラム作成:yamamoto
 ___12:スコアデバック用のプログラムを追加:yamamoto
 ___22:移動の仕様変更:yamamoto
 ___27:プレイヤーの移動をADキーのみに変更:mori
+_M05
+___01:速度にあわせて重力を増加する処理を追加:tooyama
 
 =====*/
 
@@ -25,18 +27,26 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // 変数宣言
-    [Header("ステータス")] 
+    [Header("ステータス")]
     [SerializeField, Tooltip("移動速度")] private float m_fSpeed;
     [SerializeField, Tooltip("加速")] private float m_fBoost;
     [Header("デバッグ")]
     [SerializeField, Tooltip("デバッグ表示")] private bool m_bDebugView = false;
     [SerializeField, Tooltip("デバッグプレハブ取得")] private GameObject debugPrefab;
 
+    [Header("重力関係")]
+    [SerializeField, Tooltip("ベースの重力")]private float baseGravity = 9.81f;
+
+    [SerializeField, Tooltip("重力の増加量")] private float gravityGainPerKill = 3.0f;
+
+    private float extraGravity;
+
     private Rigidbody rb;
     private ScoreManager scoreManager;
     private DebugMode debugModeInstance;
     private Vector3 moveDir = Vector3.forward; // 現在の進行方向を保持
     private int nEnemyKillCount = 0; // 倒した敵の数
+
 
 
     /*＞Start関数
@@ -48,9 +58,11 @@ public class Player : MonoBehaviour
     */
     void Start()
     {
-        rb= GetComponent<Rigidbody>();  // Rigidbodyの取得
-        scoreManager=FindAnyObjectByType<ScoreManager>();
+        rb = GetComponent<Rigidbody>();  // Rigidbodyの取得
+        scoreManager = FindAnyObjectByType<ScoreManager>();
         debugModeInstance = FindAnyObjectByType<DebugMode>(); // デバッグクラスの取得
+
+        extraGravity = baseGravity;
     }
 
     /*＞FixedUpdate関数
@@ -63,7 +75,13 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         // 向いている方向に進み続ける
-        rb.linearVelocity = transform.forward * m_fSpeed;
+        rb.linearVelocity = new Vector3(
+            transform.forward.x * m_fSpeed,
+            rb.linearVelocity.y,         
+            transform.forward.z * m_fSpeed
+            );
+        //rb.linearVelocity = transform.forward * m_fSpeed;
+        rb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);  // ←ここで常時押し込む
     }
 
     /*＞Update関数
@@ -98,8 +116,8 @@ public class Player : MonoBehaviour
             }
         }
 
-        if(debugModeInstance != null) 
-             debugModeInstance.UpdateDebugUI(transform, m_fSpeed, nEnemyKillCount); // デバッグUIの更新
+        if (debugModeInstance != null)
+            debugModeInstance.UpdateDebugUI(transform, m_fSpeed, nEnemyKillCount); // デバッグUIの更新
 
         ////////////////////////////////////////////////////
 
@@ -138,6 +156,7 @@ public class Player : MonoBehaviour
             {
                 enemy.Die();
                 AddBoost(m_fBoost);
+                AddGravity(m_fBoost);
                 nEnemyKillCount++; // キルカウントの増加
             }
         }
@@ -153,5 +172,18 @@ public class Player : MonoBehaviour
     public void AddBoost(float _boost)
     {
         m_fSpeed += _boost;
+    }
+
+    /*＞重力増加関数
+    引数：なし
+    ｘ
+    戻値：なし
+    ｘ
+    概要:加速度増加に合わせて重力を増加させる
+    */
+    public void AddGravity(float _boost)
+    {
+        extraGravity += gravityGainPerKill;
+        extraGravity = Mathf.Min(extraGravity, 40f); // 上限で制限
     }
 }

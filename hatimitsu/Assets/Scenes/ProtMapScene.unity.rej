@@ -1,0 +1,9 @@
+diff a/hatimitsu/Assets/Scenes/ProtMapScene.unity b/hatimitsu/Assets/Scenes/ProtMapScene.unity	(rejected hunks)
+@@ -575,6 +575,7 @@
+   - component: {fileID: 2069343615}
+   - component: {fileID: 2069343614}
+   - component: {fileID: 2069343617}
++  - component: {fileID: 2069343618}
+   m_Layer: 0
+   m_Name: Main Camera
+   m_TagString: MainCamera

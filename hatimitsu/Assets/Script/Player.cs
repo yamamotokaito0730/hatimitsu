@@ -60,7 +60,12 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();  // Rigidbodyの取得
         scoreManager = FindAnyObjectByType<ScoreManager>();
-        debugModeInstance = FindAnyObjectByType<DebugMode>(); // デバッグクラスの取得
+        // 初期状態でデバッグ表示ONなら、UIを生成しておく
+        if (m_bDebugView && debugModeInstance == null)
+        {
+            GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity);
+            debugModeInstance = obj.GetComponent<DebugMode>();
+        }
 
         extraGravity = baseGravity;
     }
@@ -81,7 +86,7 @@ public class Player : MonoBehaviour
             transform.forward.z * m_fSpeed
             );
         //rb.linearVelocity = transform.forward * m_fSpeed;
-        rb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);  // ←ここで常時押し込む
+        rb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
     }
 
     /*＞Update関数
@@ -103,13 +108,13 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             m_bDebugView = !m_bDebugView; // UIの表示非表示切り替え
-            if (m_bDebugView)
+            if (m_bDebugView && debugModeInstance == null)
             {
                 // プレハブからインスタンスを生成し、DebugModeを取得
                 GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity); // 座標・回転はプレハブ側で設定
                 debugModeInstance = obj.GetComponent<DebugMode>();
             }
-            else
+            else if (!m_bDebugView && debugModeInstance != null)
             {
                 Destroy(debugModeInstance.gameObject); // UIを非表示(削除)する
                 debugModeInstance = null;

@@ -336,7 +336,7 @@ MonoBehaviour:
   m_fBoost: 3
   m_bDebugView: 0
   debugPrefab: {fileID: 3883243020185667056, guid: ed7745cb878c01f4bacf00baba737fff, type: 3}
-  baseGravity: 9.81
+  baseGravity: 98.1
   gravityGainPerKill: 3
 --- !u!136 &192873568
 CapsuleCollider:

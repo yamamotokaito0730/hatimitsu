@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
     private float extraGravity;
 
     private Rigidbody rb;
-   
+    private ScoreManager scoreManager;
     private DebugMode debugModeInstance;
     private Vector3 moveDir = Vector3.forward; // 現在の進行方向を保持
     private int nEnemyKillCount = 0; // 倒した敵の数
@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();  // Rigidbodyの取得
-       
+        scoreManager = FindAnyObjectByType<ScoreManager>();
         debugModeInstance = FindAnyObjectByType<DebugMode>(); // デバッグクラスの取得
 
         extraGravity = baseGravity;
@@ -96,6 +96,7 @@ public class Player : MonoBehaviour
     {
         //////////////////////////////////////////////////////////
         //デバッグ用
+        if (Input.GetKeyDown(KeyCode.Q)) scoreManager.AddScore(100, 1); // スコア加算用　*必要か分からん
         if (Input.GetKeyDown(KeyCode.E)) m_fSpeed += m_fBoost; // 加速デバッグ用
 
         // デバッグUI表示
@@ -150,10 +151,10 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            //Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-            //if (enemy != null)
+            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            if (enemy != null)
             {
-               // enemy.Die();
+                enemy.Die();
                 AddBoost(m_fBoost);
                 AddGravity(m_fBoost);
                 nEnemyKillCount++; // キルカウントの増加

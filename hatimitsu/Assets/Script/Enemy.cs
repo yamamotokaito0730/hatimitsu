@@ -37,27 +37,54 @@ public class Enemy : MonoBehaviour
         
     }
 
-    /*＞消滅関数
-    引数：なし
-    ｘ
-    戻値：なし
-    ｘ
-    概要:この敵を消滅させる
-    */
     public void Die()
     {
         float x, y, z = 0.0f;
 
-        // エフェクトキューブ生成
         for (int i = 0; i < m_nEffectNum; i++)
         {
             x = Random.Range(-m_fPosRandRange, m_fPosRandRange);
             y = Random.Range(-m_fPosRandRange, m_fPosRandRange);
             z = Random.Range(-m_fPosRandRange, m_fPosRandRange);
 
-            Instantiate(m_EffectCube, new Vector3(transform.position.x + x, transform.position.y + y, transform.position.z + z), Quaternion.identity);
+            Vector3 spawnPos = transform.position + new Vector3(x, y, z);
+            GameObject cube = Instantiate(m_EffectCube, spawnPos, Quaternion.identity);
+
+            // 一部のキューブだけカメラに張り付ける（例：3つだけ）
+            if (i < 7)
+            {
+                EffectCube effect = cube.GetComponent<EffectCube>();
+                if (effect != null)
+                {
+                    effect.SetStickToCamera(true);
+                }
+            }
         }
 
         Destroy(gameObject);
     }
+
+    ///*＞消滅関数
+    //引数：なし
+    //ｘ
+    //戻値：なし
+    //ｘ
+    //概要:この敵を消滅させる
+    //*/
+    //public void Die()
+    //{
+    //    float x, y, z = 0.0f;
+
+    //    // エフェクトキューブ生成
+    //    for (int i = 0; i < m_nEffectNum; i++)
+    //    {
+    //        x = Random.Range(-m_fPosRandRange, m_fPosRandRange);
+    //        y = Random.Range(-m_fPosRandRange, m_fPosRandRange);
+    //        z = Random.Range(-m_fPosRandRange, m_fPosRandRange);
+
+    //        Instantiate(m_EffectCube, new Vector3(transform.position.x + x, transform.position.y + y, transform.position.z + z), Quaternion.identity);
+    //    }
+
+    //    Destroy(gameObject);
+    //}
 }

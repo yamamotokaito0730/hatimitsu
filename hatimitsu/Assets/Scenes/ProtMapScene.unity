@@ -438,6 +438,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1069166097175971188, guid: cc7447fb5bb65424eb98c429e9694e91, type: 3}
+      propertyPath: m_DrawTreesAndFoliage
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2719136768472786392, guid: cc7447fb5bb65424eb98c429e9694e91, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -485,7 +489,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8385940302516168928, guid: cc7447fb5bb65424eb98c429e9694e91, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1622936240}
   m_SourcePrefab: {fileID: 100100000, guid: cc7447fb5bb65424eb98c429e9694e91, type: 3}
 --- !u!1 &1443149301
 GameObject:
@@ -608,6 +615,32 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &1622936239 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8385940302516168928, guid: cc7447fb5bb65424eb98c429e9694e91, type: 3}
+  m_PrefabInstance: {fileID: 542943284}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1622936240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622936239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1448045563, guid: b04c77e0938d27643b3f69f2dd39ce77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _autoRefreshTerrainAtRuntime: 1
+  _enableUnityRendererWhenDisabled: 1
+  _delayInitialize: 1
+  _onlyInitializeWithinRenderingDistance: 1
+  _renderingDistanceLimit: 5000
+  _renderTreesWithNatureRenderer: 1
+  _renderDetailsWithNatureRenderer: 1
+  _optimizePatchSize: 1
+  _format: 202200
 --- !u!1 &1769803130
 GameObject:
   m_ObjectHideFlags: 0

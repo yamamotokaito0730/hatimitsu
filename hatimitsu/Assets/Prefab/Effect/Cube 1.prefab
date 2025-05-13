@@ -13,9 +13,8 @@ GameObject:
   - component: {fileID: 6174183833933789636}
   - component: {fileID: 7684680895590242123}
   - component: {fileID: -4324168048750072490}
-  - component: {fileID: -574190534869189646}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Cube 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -132,24 +131,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-574190534869189646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1182177032737272389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bad61d5e6cb435c4eb755d025a6b5c98, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stopDistanceFromCamera: 2
-  flySpeed: 5
-  stopThreshold: 0.2
-  angleOffset: 0.6

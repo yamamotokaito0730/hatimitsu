@@ -124,3 +124,4 @@ MonoBehaviour:
   m_EffectCube: {fileID: 1182177032737272389, guid: ddbd1475926a1ab43ae53e4bd5fdac1b, type: 3}
   m_nEffectNum: 10
   m_fPosRandRange: 0.01
+  m_StickyUIPrefab: {fileID: 1182177032737272389, guid: ddbd1475926a1ab43ae53e4bd5fdac1b, type: 3}

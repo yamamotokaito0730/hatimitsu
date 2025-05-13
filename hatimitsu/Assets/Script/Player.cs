@@ -1,157 +1,68 @@
-/*=====
-<Player.cs>
-„¤ì¬ÒFyamamoto
-
-„“à—e
-Player‚Ì‹““®‚ğŠÇ—‚·‚éƒXƒNƒŠƒvƒg
-
-„’ˆÓ–€
-ƒXƒRƒA‚ÌƒfƒoƒbƒO—pƒvƒƒOƒ‰ƒ€‚ğÁ‚·‚±‚Æ
-
-
-„XV—š—ğ
-Y25   
-_M04    
-__D     
-___11:ƒvƒƒOƒ‰ƒ€ì¬:yamamoto   
-___12:ƒXƒRƒAƒfƒoƒbƒN—p‚ÌƒvƒƒOƒ‰ƒ€‚ğ’Ç‰Á:yamamoto
-___22:ˆÚ“®‚Ìd—l•ÏX:yamamoto
-___27:ƒvƒŒƒCƒ„[‚ÌˆÚ“®‚ğADƒL[‚Ì‚İ‚É•ÏX:mori
-
-=====*/
-
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // •Ï”éŒ¾
-    [Header("ƒXƒe[ƒ^ƒX")] 
-    [SerializeField, Tooltip("ˆÚ“®‘¬“x")] private float m_fSpeed;
-    [SerializeField, Tooltip("‰Á‘¬")] private float m_fBoost;
-    [Header("ƒfƒoƒbƒO")]
-    [SerializeField, Tooltip("ƒfƒoƒbƒO•\¦")] private bool m_bDebugView = false;
-    [SerializeField, Tooltip("ƒfƒoƒbƒOƒvƒŒƒnƒuæ“¾")] private GameObject debugPrefab;
-
+    // å¤‰æ•°å®£è¨€
+    [SerializeField] private float m_fSpeed;
+    [SerializeField] private float m_fBoost;
     private Rigidbody rb;
     private ScoreManager scoreManager;
     private DebugMode debugModeInstance;
-    private Vector3 moveDir = Vector3.forward; // Œ»İ‚Ìis•ûŒü‚ğ•Û
-    private int nEnemyKillCount = 0; // “|‚µ‚½“G‚Ì”
+    private int nEnemyKillCount = 0; // å€’ã—ãŸæ•µã®æ•°
 
-
-    /*„StartŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:‰Šú‰»
-    */
     void Start()
     {
-        rb= GetComponent<Rigidbody>();  // Rigidbody‚Ìæ“¾
-        scoreManager=FindAnyObjectByType<ScoreManager>();
-        debugModeInstance = FindAnyObjectByType<DebugMode>(); // ƒfƒoƒbƒOƒNƒ‰ƒX‚Ìæ“¾
+        rb = GetComponent<Rigidbody>();  // Rigidbodyã®å–å¾—
+        scoreManager = FindAnyObjectByType<ScoreManager>();
+        debugModeInstance = FindAnyObjectByType<DebugMode>();
     }
 
-    /*„FixedUpdateŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:ˆê’èŠÔŠu‚ÅXV
-    */
     void FixedUpdate()
     {
-        // Œü‚¢‚Ä‚¢‚é•ûŒü‚Éi‚İ‘±‚¯‚é
-        rb.linearVelocity = transform.forward * m_fSpeed;
+        // å‘ã„ã¦ã„ã‚‹æ–¹å‘ã«é€²ã¿ç¶šã‘ã‚‹
+        rb.velocity = transform.forward * m_fSpeed;
     }
-
-    /*„UpdateŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:XVŠÖ”
-    */
 
     private void Update()
     {
-        //////////////////////////////////////////////////////////
-        //ƒfƒoƒbƒO—p
-        if (Input.GetKeyDown(KeyCode.Q)) scoreManager.AddScore(100, 1); // ƒXƒRƒA‰ÁZ—p@*•K—v‚©•ª‚©‚ç‚ñ
-        if (Input.GetKeyDown(KeyCode.E)) m_fSpeed += m_fBoost; // ‰Á‘¬ƒfƒoƒbƒO—p
-
-        // ƒfƒoƒbƒOUI•\¦
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            m_bDebugView = !m_bDebugView; // UI‚Ì•\¦”ñ•\¦Ø‚è‘Ö‚¦
-            if (m_bDebugView)
-            {
-                // ƒvƒŒƒnƒu‚©‚çƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬‚µADebugMode‚ğæ“¾
-                GameObject obj = Instantiate(debugPrefab, Vector3.zero, Quaternion.identity); // À•WE‰ñ“]‚ÍƒvƒŒƒnƒu‘¤‚Åİ’è
-                debugModeInstance = obj.GetComponent<DebugMode>();
-            }
-            else
-            {
-                Destroy(debugModeInstance.gameObject); // UI‚ğ”ñ•\¦(íœ)‚·‚é
-                debugModeInstance = null;
-            }
-        }
-
-        if(debugModeInstance != null) 
-             debugModeInstance.UpdateDebugUI(transform, m_fSpeed, nEnemyKillCount); // ƒfƒoƒbƒOUI‚ÌXV
-
-        ////////////////////////////////////////////////////
-
+        // ãƒ‡ãƒãƒƒã‚°ç”¨å‡¦ç†
+        if (Input.GetKeyDown(KeyCode.Q)) scoreManager.AddScore(100, 1);
+        if (Input.GetKeyDown(KeyCode.E)) m_fSpeed += m_fBoost;
         rotation();
     }
 
-    /*„‰ñ“]ŠÖ”
-    ˆø”F‚È‚µ
-    ‚˜
-    –ß’lF‚È‚µ
-    ‚˜
-    ŠT—v:ƒvƒŒƒCƒ„[‚ÌŒü‚«‚ğ‰ñ“]‚³‚¹‚é
-    */
     private void rotation()
     {
-        float rotateSpeed = 100f; // ‰ñ“]‘¬“x
-
+        float rotateSpeed = 100f; // å›è»¢é€Ÿåº¦
         float turn = 0f;
-
-        if (Input.GetKey(KeyCode.A)) turn = -1f; // ¶‰ñ“]
-        if (Input.GetKey(KeyCode.D)) turn = 1f;  // ‰E‰ñ“]
-
+        if (Input.GetKey(KeyCode.A)) turn = -1f;
+        if (Input.GetKey(KeyCode.D)) turn = 1f;
         if (turn != 0f)
         {
-            // Y²‚ğ’†S‚É‰ñ“]‚³‚¹‚é
             transform.Rotate(0f, turn * rotateSpeed * Time.deltaTime, 0f);
         }
     }
 
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨æ•µãŒè¡çªã—ãŸéš›ã®å‡¦ç†
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+        if (enemy != null)
         {
-            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                enemy.Die();
-                AddBoost(m_fBoost);
-                nEnemyKillCount++; // ƒLƒ‹ƒJƒEƒ“ƒg‚Ì‘‰Á
-            }
+            Debug.Log("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæ•µã¨è¡çªã—ã¾ã—ãŸ");
+            enemy.GenerateEffectCubes();  // ã‚¨ãƒ•ã‚§ã‚¯ãƒˆç”Ÿæˆ
+            nEnemyKillCount++;  // ã‚­ãƒ«ã‚«ã‚¦ãƒ³ãƒˆ
+            AddBoost(m_fBoost);  // é€Ÿåº¦ã‚’å¢—åŠ 
         }
     }
 
-    /*„‰Á‘¬“x‘‰ÁŠÖ”
-   ˆø”F‚È‚µ
-   ‚˜
-   –ß’lF‚È‚µ
-   ‚˜
-   ŠT—v:ƒvƒŒƒCƒ„[‚Ì‘¬“x‚ğ‚ ‚°‚é
-   */
     public void AddBoost(float _boost)
     {
         m_fSpeed += _boost;
+    }
+
+    public void Die()
+    {
+        Debug.Log("Player is dead!");
     }
 }

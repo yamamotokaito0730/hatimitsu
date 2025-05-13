@@ -1,90 +1,40 @@
-/*=====
-<Enemy.cs>
-„¤ì¬ÒFyamamoto
-
-„“à—e
-Enemy‚Ì‹““®‚ğŠÇ—‚·‚éƒXƒNƒŠƒvƒg
-
-„’ˆÓ–€
-
-„XV—š—ğ
-Y25   
-_M04    
-__D     
-___23:ƒvƒƒOƒ‰ƒ€ì¬:yamamoto
-
-=====*/
-
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [Header("ã‚¨ãƒ•ã‚§ã‚¯ãƒˆCubeã®ãƒ—ãƒ¬ãƒãƒ–")]
+    [SerializeField] private GameObject cubePrefab;
 
-    [Header("ƒGƒtƒFƒNƒg")]
-    [SerializeField, Tooltip("ƒvƒŒƒnƒu")] private GameObject m_EffectCube;       // ƒGƒtƒFƒNƒgƒLƒ…[ƒuƒvƒŒƒnƒu
-    [SerializeField, Tooltip("¶¬”")] private int m_nEffectNum;              // ƒGƒtƒFƒNƒgƒLƒ…[ƒu¶¬”
-    [SerializeField,Tooltip("”ÍˆÍ")] private float m_fPosRandRange;  // ƒGƒtƒFƒNƒgƒLƒ…[ƒu‚ğ¶¬‚·‚éƒ|ƒWƒVƒ‡ƒ“‚ğƒ‰ƒ“ƒ_ƒ€‚É¶¬‚·‚é‚½‚ß‚Ì”ÍˆÍ
+    [Header("ç”Ÿæˆã™ã‚‹Cubeã®æ•°")]
+    [SerializeField] private int cubeCount = 5;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [Header("Cubeã®å‡ºç¾ç¯„å›²")]
+    [SerializeField] private float spawnRadius = 1.0f;
+
+    private void OnCollisionEnter(Collision collision)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void Die()
-    {
-        float x, y, z = 0.0f;
-
-        for (int i = 0; i < m_nEffectNum; i++)
+        if (collision.gameObject.CompareTag("Player"))
         {
-            x = Random.Range(-m_fPosRandRange, m_fPosRandRange);
-            y = Random.Range(-m_fPosRandRange, m_fPosRandRange);
-            z = Random.Range(-m_fPosRandRange, m_fPosRandRange);
+            GenerateEffectCubes();
+            Destroy(gameObject); // æ•µè‡ªèº«ã‚’ç ´å£Š
+            Debug.Log("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«å½“ãŸã£ãŸï¼");
+        }
+    }
 
-            Vector3 spawnPos = transform.position + new Vector3(x, y, z);
-            GameObject cube = Instantiate(m_EffectCube, spawnPos, Quaternion.identity);
+    public void GenerateEffectCubes()
+    {
+        for (int i = 0; i < cubeCount; i++)
+        {
+            Vector3 randomOffset = Random.insideUnitSphere * spawnRadius;
+            Vector3 spawnPos = transform.position + randomOffset;
 
-            // ˆê•”‚ÌƒLƒ…[ƒu‚¾‚¯ƒJƒƒ‰‚É’£‚è•t‚¯‚éi—áF3‚Â‚¾‚¯j
-            if (i < 7)
+            GameObject cube = Instantiate(cubePrefab, spawnPos, Quaternion.identity);
+
+            // Rigidbody ãŒä»˜ã„ã¦ã„ãªã„å ´åˆã¯è¿½åŠ ï¼ˆå¿µã®ãŸã‚ï¼‰
+            if (!cube.TryGetComponent(out Rigidbody rb))
             {
-                EffectCube effect = cube.GetComponent<EffectCube>();
-                if (effect != null)
-                {
-                    effect.SetStickToCamera(true);
-                }
+                rb = cube.AddComponent<Rigidbody>();
             }
         }
-
-        Destroy(gameObject);
     }
-
-    ///*„Á–ÅŠÖ”
-    //ˆø”F‚È‚µ
-    //‚˜
-    //–ß’lF‚È‚µ
-    //‚˜
-    //ŠT—v:‚±‚Ì“G‚ğÁ–Å‚³‚¹‚é
-    //*/
-    //public void Die()
-    //{
-    //    float x, y, z = 0.0f;
-
-    //    // ƒGƒtƒFƒNƒgƒLƒ…[ƒu¶¬
-    //    for (int i = 0; i < m_nEffectNum; i++)
-    //    {
-    //        x = Random.Range(-m_fPosRandRange, m_fPosRandRange);
-    //        y = Random.Range(-m_fPosRandRange, m_fPosRandRange);
-    //        z = Random.Range(-m_fPosRandRange, m_fPosRandRange);
-
-    //        Instantiate(m_EffectCube, new Vector3(transform.position.x + x, transform.position.y + y, transform.position.z + z), Quaternion.identity);
-    //    }
-
-    //    Destroy(gameObject);
-    //}
 }
